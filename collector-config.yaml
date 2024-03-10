@@ -8,8 +8,12 @@ exporters:
   logging:
     verbosity: detailed
 
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+
   prometheus:
     endpoint: 0.0.0.0:8889
+    enable_open_metrics: true
     namespace: default
 
   otlp/tempo:
@@ -24,7 +28,7 @@ service:
   pipelines:
     metrics:
       receivers: [ otlp ]
-      exporters: [ prometheus ]
+      exporters: [ prometheusremotewrite ]
     traces:
       receivers: [ otlp ]
       exporters: [ otlp/tempo ]
