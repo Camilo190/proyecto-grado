@@ -9,7 +9,7 @@ exporters:
     verbosity: detailed
 
   prometheus:
-    endpoint: collector:8889
+    endpoint: 0.0.0.0:8889
     namespace: default
 
   otlp/tempo:

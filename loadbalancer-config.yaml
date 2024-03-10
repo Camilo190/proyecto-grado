@@ -1,0 +1,41 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:5555
+
+processors:
+  batch:
+
+exporters:
+  loadbalancing:
+    protocol:
+      otlp:
+        # all options from the OTLP exporter are supported
+        # except the endpoint
+        timeout: 1s
+        tls:
+          insecure: true
+    resolver:
+      static:
+        hostnames:
+        - collector:4317
+        - collector2:4317
+      # Notice to config a headless service DNS in Kubernetes  
+      # dns:
+      #  hostname: otelcol-headless.observability.svc.cluster.local        
+
+service:
+  pipelines:
+    logs:
+      receivers: [ otlp ]
+      processors: [ batch] 
+      exporters: [ loadbalancing ]
+    metrics:
+      receivers: [ otlp ]
+      processors: [ batch] 
+      exporters: [ loadbalancing ]
+    traces:
+      receivers: [ otlp ]
+      processors: [ batch] 
+      exporters: [ loadbalancing ]
